@@ -4,14 +4,14 @@ on: [push, pull_request]
 
 jobs:
   testsuite:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0']
+        php-version: ['8.1', '8.2', '8.3']
         composer-opts: ['']
         include:
-          - php-version: '7.2'
+          - php-version: '8.1'
             composer-opts: '--prefer-lowest'
 
     steps:
@@ -32,14 +32,14 @@ jobs:
 
     - name: Run PHPUnit
       run: |
-        if [[ ${{ matrix.php-version }} == '7.4' ]]; then
+        if [[ ${{ matrix.php-version }} == '8.1' ]]; then
           vendor/bin/phpunit --coverage-clover=coverage.xml
         else
           vendor/bin/phpunit
         fi
 
     - name: Code Coverage Report
-      if: matrix.php-version == '7.4'
+      if: matrix.php-version == '8.1'
       uses: codecov/codecov-action@v1
 
   cs-stan:
@@ -54,7 +54,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           extension-csv: mbstring, intl
           coverage: none
           tools: cs2pr, psalm, phpstan
